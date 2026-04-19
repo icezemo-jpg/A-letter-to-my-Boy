@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Love Letter For Cole 💕</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b9d;
+            --secondary: #ffa07a;
+            --bg-light: #fff5f9;
+            --bg-dark: #1a1a1a;
+            --text-light: #333;
+            --text-dark: #fff;
+            --accent: #ff1493;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+            transition: background-color 0.5s, color 0.5s;
+        }
+
+        body.light-mode {
+            background: linear-gradient(135deg, var(--bg-light) 0%, #ffe0ec 100%);
+            color: var(--text-light);
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #2d1b2e 100%);
+            color: var(--text-dark);
+        }
+
+        /* ===== PASSWORD SCREEN ===== */
+        .password-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #ff6b9d 0%, #ffa07a 100%);
+            z-index: 1000;
+            opacity: 1;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .password-screen.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .password-container {
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 400px;
+            animation: slideIn 0.6s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .password-container h1 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2.5em;
+        }
+
+        .password-container p {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .password-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .password-input-group input {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.2em;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .password-input-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .unlock-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border: none;
+            padding: 12px 40px;
+            font-size: 1.1em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .unlock-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+        }
+
+        .error-msg {
+            color: #e74c3c;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .container {
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            opacity: 0;
+            transition: opacity 0.5s ease-in 0.3s;
+        }
+
+        .container.visible {
+            opacity: 1;
+        }
+
+        /* header with theme toggle */
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .light-mode .header {
+            background: rgba(255, 245, 249, 0.8);
+        }
+
+        .dark-mode .header {
+            background: rgba(26, 26, 26, 0.8);
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            text-align: center;
+            padding: 60px 40px;
+            margin-top: 40px;
+        }
+
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInScale 0.8s ease-out;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.8;
+            animation: fadeIn 1s ease-out 0.2s both;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Timeline */
+        .timeline-section {
+            padding: 60px 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .timeline-section h2 {
+            font-size: 2.5em;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            position: relative;
+            animation: slideInItem 0.6s ease-out both;
+        }
+
+        @keyframes slideInItem {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+        .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+        .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 0;
+            margin-right: auto;
+            width: 45%;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-left: auto;
+            margin-right: 0;
+            width: 45%;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border: 4px solid var(--primary);
+            border-radius: 50%;
+            transform: translateX(-50%);
+            transition: all 0.3s;
+        }
+
+        .timeline-item:hover .timeline-dot {
+            width: 30px;
+            height: 30px;
+            transform: translateX(-50%) scale(1.2);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .timeline-content {
+            background: var(--primary);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .dark-mode .timeline-content {
+            background: var(--secondary);
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.3);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.4em;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content .date {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content .memory {
+            font-size: 1em;
+            line-height: 1.6;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .timeline-item.active .timeline-content .memory {
+            max-height: 200px;
+        }
+
+        /* Love Letter Section */
+        .love-letter-section {
+            padding: 60px 40px;
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .love-letter-section h2 {
+            font-size: 2.5em;
+            color: var(--primary);
+            margin-bottom: 40px;
+        }
+
+        .letter-envelope {
+            perspective: 1000px;
+            margin: 40px auto;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 2/1;
+            background: linear-gradient(135deg, #fff 0%, #ffeaa7 100%);
+            border: 2px solid var(--primary);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .envelope:hover {
+            transform: translateY(-10px);
+        }
+
+        .envelope.opened {
+            transform: rotateX(90deg);
+        }
+
+        .envelope-text {
+            font-size: 2em;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .letter-content {
+            background: #fffef0;
+            padding: 40px;
+            border-radius: 10px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+            border: 2px solid var(--primary);
+        }
+
+        .letter-content.revealed {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .letter-content p {
+            font-size: 1.1em;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #333;
+            text-align: left;
+        }
+
+        .letter-sign-off {
+            margin-top: 30px;
+            font-size: 1.3em;
+            font-style: italic;
+            color: var(--primary);
+        }
+
+        /* Music Player */
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .music-player button {
+            background: white;
+            color: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+            transition: all 0.3s;
+        }
+
+        .music-player button:hover {
+            transform: scale(1.1);
+        }
+
+        .music-player audio {
+            display: none;
+        }
+
+        /* Settings Modal */
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            right: -350px;
+            width: 350px;
+            height: 100vh;
+            background: var(--primary);
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.2);
+            padding: 30px 20px;
+            z-index: 999;
+            overflow-y: auto;
+            transition: right 0.3s ease-out;
+        }
+
+        .settings-modal.open {
+            right: 0;
+        }
+
+        .settings-modal h2 {
+            color: white;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+        }
+
+        .settings-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            color: white;
+        }
+
+        .settings-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-size: 1.05em;
+        }
+
+        .settings-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            margin-right: 15px;
+            cursor: pointer;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 30px;
+        }
+
+        .logout-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .close-settings {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            color: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .close-settings:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Particle Animation */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 2em;
+            animation: float 3s ease-in forwards;
+        }
+
+        @keyframes float {
+            to {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .floating-hearts {
+            position: fixed;
+            font-size: 1.5em;
+            opacity: 0.6;
+            animation: floatAround 20s infinite ease-in-out;
+        }
+
+        @keyframes floatAround {
+            0%, 100% { transform: translateY(0) translateX(0); }
+            25% { transform: translateY(-20px) translateX(20px); }
+            50% { transform: translateY(-40px) translateX(-20px); }
+            75% { transform: translateY(-20px) translateX(20px); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2em;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item:nth-child(odd) .timeline-content,
+            .timeline-item:nth-child(even) .timeline-content {
+                width: 100%;
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+
+            .timeline-dot {
+                left: 20px;
+            }
+
+            .music-player {
+                bottom: 20px;
+                right: 20px;
+            }
+
+            .password-container {
+                padding: 30px;
+                max-width: 90%;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <!-- PASSWORD SCREEN -->
+    <div class="password-screen" id="passwordScreen">
+        <div class="password-container">
+            <h1>💕</h1>
+            <p>This is a secret love note from me to you</p>
+            <p>Can you guess the password?</p>
+            <div class="password-input-group">
+                <input type="password" id="passwordInput" placeholder="Enter password..." maxlength="50">
+            </div>
+            <button class="unlock-btn" onclick="checkPassword()">Unlock My Heart</button>
+            <div class="error-msg" id="errorMsg"></div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="container" id="mainContent">
+        <!-- HEADER -->
+        <div class="header">
+            <h1 style="font-size: 1.5em; background: linear-gradient(135deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">💕 Forever With You</h1>
+            <div style="display: flex; gap: 10px;">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+                <button class="theme-toggle" onclick="toggleSettings()" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); font-size: 1.3em;">⚙️</button>
+                <button class="theme-toggle" onclick="window.location.href='second.html'" style="background: linear-gradient(135deg, #f9a1d4, #ffb8a3); font-size: 1.1em;">🌟</button>
+                <button class="theme-toggle" onclick="window.location.href='third.html'" style="background: linear-gradient(135deg, #ff8ac7, #ff5d9f); font-size: 1.1em;">❤️</button>
+                <button class="theme-toggle" onclick="window.location.href='fourth.html'" style="background: linear-gradient(135deg, #00c1d4, #2d8fd3); font-size: 1.1em;">🌊</button>
+                <button class="theme-toggle" onclick="window.location.href='fifth.html'" style="background: linear-gradient(135deg, #f4b8ff, #c077e4); font-size: 1.1em;">🖋️</button>
+            </div>
+        </div>
+
+        <!-- SETTINGS MODAL -->
+        <div class="settings-modal" id="settingsModal">
+            <button class="close-settings" onclick="toggleSettings()">✕</button>
+            <h2>⚙️ Settings</h2>
+            <div class="settings-item">
+                <label>
+                    <input type="checkbox" id="keepSignedIn" onchange="toggleKeepSignedIn()">
+                    <span>Keep me signed in</span>
+                </label>
+                <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">Stay logged in so you don't need to enter the password again.</p>
+            </div>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+
+        <!-- HERO SECTION -->
+        <div class="hero">
+            <h1>My Letter to you, Cole</h1>
+            <p>Our story, our memories, our forever 💕</p>
+        </div>
+
+        <!-- TIMELINE SECTION -->
+        <div class="timeline-section">
+            <h2>✨ Our Special Moments</h2>
+            <div class="timeline" id="timeline">
+                <!-- Timeline items will be populated here -->
+            </div>
+        </div>
+
+        <!-- LOVE LETTER SECTION -->
+        <div class="love-letter-section">
+            <h2>💌 A Love Letter To You</h2>
+            <div class="letter-envelope">
+                <div class="envelope" id="envelope">
+                    <div class="envelope-text">💌 Open Me</div>
+                </div>
+                <div class="letter-content" id="letterContent">
+                    <p>My Love,</p>
+                    <p>
+                        I’ve been thinking a lot about how to put into words what you mean to me, and the truth is… 
+                        it never feels like enough. But I’m going to try, because you deserve to hear it.
+                    </p>
+                    <p>
+                        I am so incredibly proud of you. Not just for the big things you’ve done, but for who you are every single day. 
+                        The way you keep going even when things are hard, the way you care, the way you show up—it all inspires me more than you probably realize.
+                        Watching you grow and chase your goals makes me admire you more and more.
+                    </p>
+                    <p>
+                        You are my rock, my safe place, and my biggest cheerleader. I hope you know that I am always here for you, through every high and every low. 
+                        I want to be the one you can count on, the one who makes you feel loved and supported no matter what.
+                    </p>
+                    <p>
+                        I don’t just love you for who you are right now—I love the life we’re building together, the future I see with you.
+                        When I think about forever, it doesn’t feel overwhelming or uncertain… it feels right. It feels like you..
+                    </p>
+                    <p> I want to be there for everything—your wins, your struggles, your dreams, your late-night thoughts, all of it. I want to keep growing with you, learning with you, laughing with you.
+                        I want to stand beside you through whatever life brings, because there’s no one else I’d rather face it with
+                    </p>
+                    <p> You mean so much to me, more than I could ever fully explain. And if I’m being honest… I don’t just see you as my boyfriend.
+                        I see you as the person I want to spend my life with.
+                            
+                    </p>
+                    <p>I love you, Always</p>
+                    <div class="letter-sign-off">
+                        Yours,<br>
+                        Aurora 💕
+                    </div>
+                    <button onclick="resetLetter()" style="margin-top: 30px; padding: 10px 25px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 1em; transition: all 0.3s;">Close Letter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div style="text-align: center; padding: 60px 40px; opacity: 0.6;">
+            <p>Made with 💕 just for you</p>
+        </div>
+    </div>
+
+    <!-- PARTICLES -->
+    <div class="particles" id="particles"></div>
+
+    <!-- MUSIC PLAYER -->
+    <div class="music-player">
+        <audio id="bgMusic" loop>
+            <source src="Arctic Monkeys - 505.mp3" type="audio/mpeg">
+        </audio>
+        <button id="musicToggle" onclick="toggleMusic()">🎵</button>
+    </div>
+
+    <script>
+        // ===== PASSWORD SYSTEM =====
+        const PASSWORD = "my babyboy"; // Change this to your desired password
+
+        function checkPassword() {
+            const input = document.getElementById('passwordInput');
+            const errorMsg = document.getElementById('errorMsg');
+
+            if (input.value.toLowerCase() === PASSWORD) {
+                // Correct password
+                document.getElementById('passwordScreen').classList.add('hidden');
+                document.getElementById('mainContent').classList.add('visible');
+                startAnimations();
+                errorMsg.textContent = '';
+            } else {
+                // Wrong password
+                errorMsg.textContent = '❌ Wrong password. Try again!';
+                input.value = '';
+                input.focus();
+            }
+        }
+
+        // Allow Enter key to submit password
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('passwordInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') checkPassword();
+            });
+            // Check if user should be auto-logged in
+            checkAutoLogin();
+        });
+
+        // ===== SETTINGS & AUTO-LOGIN =====
+        function checkAutoLogin() {
+            const keepSignedIn = localStorage.getItem('keepSignedIn') === 'true';
+            if (keepSignedIn) {
+                document.getElementById('passwordScreen').classList.add('hidden');
+                document.getElementById('mainContent').classList.add('visible');
+                startAnimations();
+                document.getElementById('keepSignedIn').checked = true;
+            }
+        }
+
+        function toggleSettings() {
+            document.getElementById('settingsModal').classList.toggle('open');
+        }
+
+        function toggleKeepSignedIn() {
+            const isChecked = document.getElementById('keepSignedIn').checked;
+            localStorage.setItem('keepSignedIn', isChecked);
+        }
+
+        function logout() {
+            localStorage.setItem('keepSignedIn', 'false');
+            document.getElementById('keepSignedIn').checked = false;
+            toggleSettings();
+            location.reload();
+        }
+
+        // ===== THEME TOGGLE =====
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+
+            body.classList.toggle('light-mode');
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        // ===== TIMELINE DATA =====
+        const memories = [
+            {
+                title: "The Day We Met",
+                date: "june 8, 2025",
+                memory: "I remember it like it was yeasterday. The way you smiled at me, and how i hit my head in awe of you. i was sp embarrased but im glad i met you that day."
+            },
+            {
+                title: "Our First Kiss",
+                date: "june 8, 2025",
+                memory: "My heart skipped a beat. Time stopped, and all that mattered was you and me in that moment. and we sure moved fast. lol."
+            },
+            {
+                title: "when I Realized ",
+                date: "june 16, 2023",
+                memory: "It was that moment when i was looking at you on that day when i had to leave, that I realized I never wanted to. I wanted you to be in my life forever so I never had to leave you."
+            },
+            {
+                title: "Making Plans",
+                date: "december 18, 2025",
+                memory: "spending christmas with you was an amazing part of our jounery ."
+            },
+            {
+                title: "My Promise To You",
+                date: "Always",
+                memory: "I promise to choose you every single day. To hold your hand through life's journey, to be your strength when you need it, and to love you endlessly."
+            }
+        ];
+
+        // ===== POPULATE TIMELINE =====
+        function populateTimeline() {
+            const timeline = document.getElementById('timeline');
+            memories.forEach((memory, index) => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item';
+                item.innerHTML = `
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>${memory.title}</h3>
+                        <div class="date">📅 ${memory.date}</div>
+                        <div class="memory">${memory.memory}</div>
+                    </div>
+                `;
+                item.addEventListener('click', () => toggleMemory(item));
+                timeline.appendChild(item);
+            });
+        }
+
+        // ===== TOGGLE MEMORY REVEAL =====
+        function toggleMemory(element) {
+            element.classList.toggle('active');
+        }
+
+        // ===== LOVE LETTER INTERACTION =====
+        document.getElementById('envelope').addEventListener('click', function() {
+            if (this.classList.contains('opened')) {
+                resetLetter();
+            } else {
+                this.classList.add('opened');
+                document.getElementById('letterContent').classList.add('revealed');
+                createHeartParticles();
+            }
+        });
+
+        // ===== RESET LETTER =====
+        function resetLetter() {
+            const envelope = document.getElementById('envelope');
+            const letterContent = document.getElementById('letterContent');
+            envelope.classList.remove('opened');
+            letterContent.classList.remove('revealed');
+            envelope.style.transform = 'rotateX(0deg)';
+        }
+
+        // ===== PARTICLE ANIMATION =====
+        function createHeartParticles() {
+            const container = document.getElementById('particles');
+            const hearts = ['💕', '❤️', '💗', '💖'];
+
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const heart = document.createElement('div');
+                    heart.className = 'heart';
+                    heart.textContent = hearts[Math.floor(Math.random() * hearts.length)];
+                    heart.style.left = Math.random() * 100 + '%';
+                    heart.style.top = '100vh';
+                    container.appendChild(heart);
+
+                    setTimeout(() => heart.remove(), 3000);
+                }, i * 100);
+            }
+        }
+
+        // ===== FLOATING HEARTS =====
+        function addFloatingHearts() {
+            const container = document.querySelector('.hero');
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'floating-hearts';
+                heart.textContent = '💕';
+                heart.style.left = Math.random() * 90 + '%';
+                heart.style.top = Math.random() * 30 + '%';
+                heart.style.animationDelay = Math.random() * 5 + 's';
+                container.appendChild(heart);
+            }
+        }
+
+        // ===== MUSIC PLAYER =====
+        let isMusicPlaying = false;
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicToggle');
+
+            if (isMusicPlaying) {
+                audio.pause();
+                btn.textContent = '🎵';
+                isMusicPlaying = false;
+            } else {
+                audio.play().catch(e => console.log('Autoplay prevented:', e));
+                btn.textContent = '⏸️';
+                isMusicPlaying = true;
+            }
+        }
+
+        // ===== START ANIMATIONS =====
+        function startAnimations() {
+            populateTimeline();
+            addFloatingHearts();
+        }
+
+        // ===== HOVER PARTICLE EFFECT =====
+        document.addEventListener('mousemove', function(e) {
+            const randomChance = Math.random();
+            if (randomChance < 0.02) { // 2% chance on each move
+                const container = document.getElementById('particles');
+                const heart = document.createElement('div');
+                heart.className = 'heart';
+                heart.textContent = '✨';
+                heart.style.left = e.pageX + 'px';
+                heart.style.top = e.pageY + 'px';
+                container.appendChild(heart);
+
+                setTimeout(() => heart.remove(), 3000);
+            }
+        });
+    </script>
+</body>
+</html>

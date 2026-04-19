@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moonlit Love Story 🌙</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #ff6b9d;
+            --secondary: #8c64c2;
+            --bg-light: #fdf4ff;
+            --bg-dark: #130a22;
+            --text-light: #332845;
+            --text-dark: #f8f0ff;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--bg-light) 0%, #f9e5ff 100%);
+            color: var(--text-light);
+            transition: background 0.5s, color 0.5s;
+            overflow-x: hidden;
+        }
+
+        body.dark-mode {
+            background: linear-gradient(135deg, #130a22 0%, #3c2464 100%);
+            color: var(--text-dark);
+        }
+
+        .container {
+            width: 100%;
+            padding-bottom: 100px;
+        }
+
+        .header {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            padding: 20px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(12px);
+        }
+
+        body.light-mode .header {
+            background: rgba(253, 244, 255, 0.92);
+        }
+
+        body.dark-mode .header {
+            background: rgba(12, 5, 30, 0.85);
+        }
+
+        .theme-toggle {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: transform 0.3s;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg);
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 40px 20px;
+        }
+
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            max-width: 750px;
+            margin: 0 auto;
+            font-size: 1.15em;
+            line-height: 1.8;
+            opacity: 0.9;
+        }
+
+        .story-grid {
+            display: grid;
+            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            max-width: 1080px;
+            margin: 45px auto;
+            padding: 0 20px;
+        }
+
+        .story-card {
+            background: rgba(255, 255, 255, 0.92);
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 16px 45px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        body.dark-mode .story-card {
+            background: rgba(31, 15, 58, 0.88);
+            color: var(--text-dark);
+        }
+
+        .story-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 22px 55px rgba(0, 0, 0, 0.15);
+        }
+
+        .story-card h2 {
+            font-size: 1.7em;
+            margin-bottom: 18px;
+            color: var(--secondary);
+        }
+
+        .story-card p {
+            line-height: 1.8;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 30px;
+        }
+
+        .nav-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 24px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #fff8ff, #ffd8f2);
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 700;
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transition: transform 0.2s;
+        }
+
+        .nav-link:hover {
+            transform: translateY(-3px);
+        }
+
+        .music-player {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 99;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .music-player button {
+            background: white;
+            color: var(--primary);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2em;
+        }
+
+        .music-player audio {
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            opacity: 0.7;
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 18px 20px;
+            }
+
+            .hero h1 {
+                font-size: 2.4em;
+            }
+
+            .hero p {
+                font-size: 1.05em;
+            }
+        }
+    </style>
+</head>
+<body class="light-mode">
+    <div class="container">
+        <div class="header">
+            <h1>Moonlit Love Story</h1>
+            <div style="display:flex; gap:10px;">
+                <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">🌙</button>
+                <button class="theme-toggle" onclick="goPageTwo()" style="background: linear-gradient(135deg, #f9a1d4, #ffb8a3); font-size: 1.1em;">🌟</button>
+                <button class="theme-toggle" onclick="window.location.href='fourth.html'" style="background: linear-gradient(135deg, #00c1d4, #2d8fd3); font-size: 1.1em;">🌊</button>
+                <button class="theme-toggle" onclick="window.location.href='fifth.html'" style="background: linear-gradient(135deg, #f4b8ff, #c077e4); font-size: 1.1em;">🖋️</button>
+                <button class="theme-toggle" onclick="goHome()" style="background: linear-gradient(135deg, #d4c7ff, #ffb8a3); font-size: 1.1em;">🏠</button>
+            </div>
+        </div>
+
+        <div class="hero">
+            <h1>Moonlight, wishes, and you</h1>
+            <p>Let this page be a gentle night where every memory glows softly, and every promise feels like starlight.</p>
+        </div>
+
+        <div class="story-grid">
+            <div class="story-card">
+                <h2>Night Walks</h2>
+                <p>Walking under the glow of the moon with your hand in mine is one of my favorite quiet adventures.</p>
+            </div>
+            <div class="story-card">
+                <h2>Stolen Smiles</h2>
+                <p>Every laugh shared under the stars feels a little more magical than the last.</p>
+            </div>
+            <div class="story-card">
+                <h2>Dreamy Moments</h2>
+                <p>When I close my eyes and think of us, I picture a soft moonlit night where time moves only for our hearts.</p>
+            </div>
+            <div class="story-card">
+                <h2>Secret Wishes</h2>
+                <p>I wish for endless nights like this, with you by my side and your love lighting my way.</p>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a class="nav-link" href="second.html">← Back to Page 2</a>
+            <a class="nav-link" href="index.html">🏠 Back to Home</a>
+        </div>
+
+        <p class="footer">A third page, soft and romantic, just for our story.</p>
+    </div>
+
+    <div class="music-player">
+        <audio id="bgMusic" loop>
+            <source src="Arctic Monkeys - 505.mp3" type="audio/mpeg">
+        </audio>
+        <button id="musicToggle" onclick="toggleMusic()">🎵</button>
+    </div>
+
+    <script>
+        let isMusicPlaying = false;
+
+        function toggleTheme() {
+            const body = document.body;
+            const themeToggle = document.getElementById('themeToggle');
+            body.classList.toggle('light-mode');
+            body.classList.toggle('dark-mode');
+            themeToggle.textContent = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+
+        function toggleMusic() {
+            const audio = document.getElementById('bgMusic');
+            const btn = document.getElementById('musicToggle');
+            if (isMusicPlaying) {
+                audio.pause();
+                btn.textContent = '🎵';
+                isMusicPlaying = false;
+            } else {
+                audio.play().catch(e => console.log('Autoplay prevented:', e));
+                btn.textContent = '⏸️';
+                isMusicPlaying = true;
+            }
+        }
+
+        function goPageTwo() {
+            window.location.href = 'second.html';
+        }
+
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+    </script>
+</body>
+</html>
